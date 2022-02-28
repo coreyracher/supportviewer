@@ -1,0 +1,414 @@
+<style>
+  .wrapp,
+  .navcontainer {
+    background-color: gray;
+  }
+
+  body,
+  .module {
+    background-color: black;
+    background-image: radial-gradient(rgba(0, 150, 0, 0.75), black 120%);
+    height: 100vh;
+    margin: 0;
+
+    padding: 2rem;
+    color: white;
+    font: 1.3rem Inconsolata, monospace;
+    text-shadow: 0 0 5px #c8c8c8;
+  }
+
+
+
+  ::selection {
+    background: #0080ff;
+    text-shadow: none;
+  }
+
+  pre {
+    margin: 0;
+  }
+
+  a:link {
+    color: rgb(60, 255, 0);
+    background-color: transparent;
+    text-decoration: none;
+  }
+
+  a:visited {
+    color: rgb(60, 255, 0);
+    background-color: transparent;
+    text-decoration: none;
+  }
+
+  .zero {
+    color: rgb(115, 115, 115);
+  }
+
+  a.zero:link {
+    color: rgb(115, 115, 115);
+  }
+
+  .one {
+    color: rgb(248, 244, 7);
+  }
+
+  a.one:link {
+    color: rgb(248, 244, 7);
+  }
+
+  a.one:visited {
+    color: rgb(248, 244, 7);
+  }
+
+  .longOutDate {
+    color: rgb(60, 255, 0);
+  }
+
+  .module {
+    background-color: gray;
+    overflow-y: scroll;
+  }
+
+  .box {
+    margin: 5px 5px 5px 5px;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid rgb(60, 255, 0);
+    background-color: rgba(0, 0, 0, 100);
+    width: 800px;
+  }
+
+  .blue {
+    /*	border: 2px dashed lightblue; */
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .orange {
+    /* border:2px dashed orange; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clockc {
+    width: 125px;
+    font-family: monaco, Consolas, "Lucida Console", monospace;
+    font-size: 12px;
+    font-weight: bold;
+    color: rgb(60, 255, 0);
+  }
+
+  .map {
+    width: 125px;
+  }
+
+  .bottomBar {
+    position: fixed;
+    width: 100%;
+    height: 460px;
+    background: #000;
+    bottom: 0px;
+  }
+</style>
+
+<html>
+
+
+<body>
+ 
+  <div id="spiceworks"> </div>
+  <div id="page-container"></div>
+
+
+
+
+
+  <script>
+
+
+
+    function showClock(p1, p2) {
+      // Set the date we're counting down to
+      var countDownDate = new Date(p1).getTime();
+
+      // Update the count down every 1 second
+      var x = setInterval(function() {
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = now - countDownDate;
+
+        // Time calculations for days, hours, minutes and seconds
+
+        var hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        //add one to any neg number to fix no -0
+        if (hours > 0) {
+          // Positive
+        } else {
+          hours += 1;
+        }
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the result in the element with id="demo"
+        var p3 = "showtimer" + p2;
+        document.getElementById(p3).innerHTML =
+          hours + "h " + minutes + "m " + seconds + "s ";
+
+        // If the count down is finished, write some text
+        // if (distance < 0) {
+        //   clearInterval(x);
+        //   document.getE
+      }, 1000);
+    }
+    var displayDay = new Date().getDate();
+   
+    //Lets make staff items for the display
+    function makestaff(staffName,staffStart,staffEnd){
+      //we will only wish to display staff that are the same as displayday
+      var tempStaffStart = new Date(staffStart).getDate();
+      
+      
+      if (tempStaffStart == displayDay) {
+       
+      if (isNaN(staffName)){}else{staffName="Full Day"}
+  
+      
+      let staffHtmlContent = `<div class="box" style="border-color: blue; text-align: center">${staffStart.substring(staffStart.length -8)} ${staffName}   
+      ${staffEnd.substring(staffEnd.length -8)}
+       
+        </div>`
+      document.getElementById("page-container").innerHTML += staffHtmlContent;
+      }   
+
+    }
+
+   
+    function makeshow(
+      showName,
+      showURL,
+      showStart,
+      showEnd,
+      showStreamURL,
+      showTeams,
+      showMap,
+      showLumi,
+      showExpUsers,
+      showZoom,
+      showUnion,
+      showEn,
+      showFr,
+      showComplexity,
+      showCvent,
+      showGoLive,
+      showStartDate,
+      showEndDate,
+      showTakedown,
+      showVersion,
+      showWO
+    ) {
+
+     
+      //--- brightcove check and pull video ID Nov 22nd 2001---
+      
+      if(showStreamURL.includes("brightcove")){var brightcoveID = showStreamURL.slice(showStreamURL.length -13);}else{var brightcoveID =" " }
+
+       // Show NO STREAM if a stream is not passed 
+       //if (showStreamURL = 0) { showStreamURL = "/cms/data/modules/code/nostream.png"}
+      
+      
+      
+      
+      //setup some vars for date check 
+
+      var tempMakeShowStartDay = new Date(showStart).getDate();
+      
+      
+      // -----  this section checks to see if a field has a value and if it does it sets ...IsTrue to one to later be used as a cc class
+      //check to see if there is a value for Union
+      if (showUnion != 0) {
+        var tempUnionIsTrue = "one";
+      } else {}
+      //check to see if there is a value for Lumi
+      if (showZoom != 0) {
+        var tempZoomIsTrue = "one";
+      } else {}
+      //check to see if there is a value for Lumi
+      if (showLumi != 0) {
+        var tempLumiIsTrue = "one";
+      } else {}
+      //check to see if there is a value for En
+      if (showEn != 0) {
+        var tempEnIsTrue = "one";
+      } else {}
+      //check to see if there is a value for En
+      if (showFr != 0) {
+        var tempFrIsTrue = "one";
+      } else {}
+      //check to see if there is a value for cvent
+      if (showCvent != 0) {
+        var tempCventIsTrue = "one";
+      } else {}
+      //only run function if show date is today
+      if (tempMakeShowStartDay == displayDay) {
+        console.log(
+          showName + " today bc " + tempMakeShowStartDay + " = " + displayDay
+        );
+        let htmlContent = `
+    <div class="box ${showURL}" id="box ${showURL}">
+      <div class="blue"> 
+        <div><span>Start <br>${showStart.substring(showStart.length -8)} </span><br></div>
+       
+        
+        <span title="Is the show Classified as a Union Event?"class="zero ${tempUnionIsTrue}">Union</span>
+        <span>
+            &nbsp <a href="${showZoom}" title="Show has Zoom bases Chime Support" target="_blank" class="zero ${tempZoomIsTrue}"> zSUPPORT </a>
+          </span> 
+          <span title="Does the show have Lumi? If some the Event Numbers is ${showLumi}"class="zero ${tempLumiIsTrue}">&nbsp LUMI</span> 
+          <span title="Does the show have CVENT sold?" class="zero ${tempCventIsTrue}">cvent</span>
+          <span>
+          <span title="Does the show have English?" class="zero ${tempEnIsTrue}">En</span> 
+          <span title="Does the show have French?" class="zero ${tempFrIsTrue}">Fr</span> 
+          
+          </span>
+          <div style="text-align: right"><span>End<br>${showEnd.substring(showEnd.length -8)} </span><br></div>
+      </div>
+      <div class="blue"> 
+        
+        <div class="orange"> 
+          <iframe src="${showStreamURL}" height="225" width="400" frameborder="0" allow="autoplay;  fullscreen; picture-in-picture" allowfullscreen> 
+          </iframe> 
+        </div> 
+        <div class="center orange"> 
+          <p><a href="${showTeams}" target="_blank">
+            <br><br><br> >TEAMS </a><a href="https://${showURL}/cirrus/cms/#/agenda2" target="_blank"> >AGENDA </a><a href="https://${showURL}/cirrus/cms/#/users" target="_blank"> >DELEGATES </a><br><br> 
+      
+            ${showURL} <br>
+
+            <span title="The CMS version the show is on">Version: ${showVersion} </span> <br>
+            <span title="The Work Order provided for the show">WO: ${showWO} </span> <br>
+            <span title="GO Live Date" class="longOutDate"> ${showGoLive} /</span> 
+            <span title="Show Start Date">${showStartDate} -</span>
+            <span title="Show End Date">${showEndDate}  </span>
+            <span title="Show Take Down" class="longOutDate">/ ${showTakedown} </span> <br> 
+            <span title="Developer Complexity">D.CPLX ${showComplexity} </span> <br>
+            Location: ${showMap} <br>
+            <span title="Developer Complexity">brightcove: ${brightcoveID}</span> <br>
+            
+        
+           
+            </p> 
+        </div> 
+        <div class="right orange"> 
+          <p></p> 
+        </div>
+        <div class="four orange"> 
+          <p></p> 
+        </div> </div> <div class="blue"> 
+        <div class="orange clockc"> 
+          
+        <p id="showtimerstart${showURL}"> start </p>
+        </div> 
+        <div class="orange"> 
+          <span class="one">&nbsp 
+            <span id="ticketCount${showURL}">#</span>
+            ${showExpUsers} &nbsp
+          </span> 
+          <span>  
+            <a href="https://${showURL}/app" target="_blank">${showName}</a> 
+          </span>
+ 
+        </div> 
+        <div       class="orange clockc"> <p id="showtimerend${showURL}"> end </p> 
+        </div> 
+      </div> 
+    </div>`;
+
+        document.getElementById("page-container").innerHTML += htmlContent;
+
+        showClock(showStart, "start" + showURL);
+        showClock(showEnd, "end" + showURL);
+      } else {
+        console.log(
+          showName + " !TODAY " + tempMakeShowStartDay + " != " + displayDay
+        );
+      }
+      // debugger;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    function displayDayPlus(changeBy) {
+      if (displayDay == 31){displayDay = 0;}
+      displayShows()
+
+      displayDay += changeBy;
+      // Clear screen 
+      document.getElementById("page-container").innerHTML = `<div style="text-align: center;"> <a id="demo" class="one" onclick="displayDayPlus(-1)">-</a> ${displayDay} <a id="demo" class="one" onclick="displayDayPlus(1)">+</a> 
+    </div>`;
+
+      displayShows();
+      console.log(" displayDay is set to " + displayDay);
+
+      document.getElementById("page-container").innerHTML +=
+        "<br><br><br><br><br><br><br>";
+    }
+    //call dispalyDayplus to put the buttons up to start things off.
+    displayDayPlus(0)
+
+
+   
+    
+
+
+
+    //link to spiceworks https://test.chime.live/en/test-your-system/ aklineplayer exceldoc modeuleAutoRefresh
+    //link to spiceworks https://test.chime.live/en/test-your-system/ aklineplayer exceldoc modeuleAutoRefresh
+let headerHolder = document.getElementById("header").innerHTML;  
+    document.getElementById("header").innerHTML =
+      '<div class="btn-live-stream btn btn-danger" align="left" style="position: relative; float: right;" ><a href="https://on.spiceworks.com/" style="color:white" target="_blank"> <span class="hidden-small">Spiceworks </span> </a> </div>';
+    document.getElementById("header").innerHTML += "<a> &nbsp </a>";
+    document.getElementById("header").innerHTML +=
+      '<div class="btn-live-stream btn btn-danger" ><a href="https://teams.microsoft.com/l/file/6F856870-E035-4589-942F-17D367636BB5?tenantId=5401e4bc-dd14-49e9-83f0-6149a597b98a&fileType=xlsx&objectUrl=https%3A%2F%2Fpsav.sharepoint.com%2Fsites%2FChimeSupportCA%2FShared%20Documents%2FGeneral%2FDigital%20Shows%20Sheet.xlsx&baseUrl=https%3A%2F%2Fpsav.sharepoint.com%2Fsites%2FChimeSupportCA&serviceName=teams&threadId=19:5b66b39af6ca4997933356b361bfd05c@thread.tacv2&groupId=89e768ba-59a3-4afa-9329-575a80bd7219" style="color:white" target="_blank"> Show Sheet </a> </div>';
+    document.getElementById("header").innerHTML += "<a> &nbsp </a>";
+    document.getElementById("header").innerHTML +=
+      '<div class="btn-live-stream btn btn-danger" align="left" ><a href="https://encorestudiospaces.skedda.com/booking?viewtype=2" style="color:white" target="_blank"> <span class="hidden-small">Skedda </span> </a> </div>';
+      document.getElementById("header").innerHTML += headerHolder ;
+
+
+    function displayShows() {
+
+
+      /*
+  makeshow("show name", "show.url","startTime","endTime,"stream.embed.url","https://teams.microsoft.link"
+  "MAP");
+  */
+
+  
+  
+
+
+
+  
+
+
+
+      /*
+      makeshow("show name", "show.url","startTime","endTime,"stream.embed.url","https://teams.microsoft.link","MAP");
+        */
+    }
+  </script>
+</body>
+
+</html>
